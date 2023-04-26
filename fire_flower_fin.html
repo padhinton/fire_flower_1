@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Fireworks Example</title>
+    <script src="https://cdn.jsdelivr.net/npm/fireworks-js@2.x/dist/index.umd.js"></script>
+    <style>
+      #video {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: 0;
+      }
+      .fireworks {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+      }
+    </style>
+  </head>
+  <body>
+    <video id="video"></video>
+    <div class="fireworks"></div>
+
+    <script>
+      const container = document.querySelector('.fireworks')
+      const fireworks = new Fireworks.default(container)
+
+      // get access to the user's camera
+      navigator.mediaDevices.getUserMedia({ video: true })
+        .then(function (stream) {
+          // set the video element to show the user's camera
+          const videoElement = document.getElementById('video')
+          videoElement.srcObject = stream
+          videoElement.play()
+
+          // start the fireworks animation
+          fireworks.start({
+            colors: ['#ffffff', '#ff0000', '#00ff00', '#0000ff'],
+            minScaleMultiplier: 0.3,
+            maxScaleMultiplier: 0.5,
+            minRadiusMultiplier: 0.15,
+            maxRadiusMultiplier: 0.25,
+            density: 5,
+            explosionChance: 0.2,
+            maxAge: {
+                min: 10,
+                max: 30
+            },
+            beforeParticleRender: function (particle) {
+              // reduce opacity for particles
+              particle.opacity = 0.5;
+            }
+          })
+        })
+        .catch(function (err) {
+          console.error(err)
+        })
+    </script>
+  </body>
+</html>
